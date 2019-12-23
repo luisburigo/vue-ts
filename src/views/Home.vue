@@ -1,18 +1,24 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div>
+        <button @click="showDialog">Show</button>
+    </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+<script lang="ts">
+    import {Component, Vue} from 'vue-property-decorator';
+    import {DialogService} from "@/common/DialogService";
+    import PeopleDialog from "@/components/PeopleDialog/PeopleDialog.vue";
 
-export default {
-  name: 'home',
-  components: {
-    HelloWorld
-  }
-}
+    @Component
+    export default class Home extends Vue {
+        async showDialog() {
+            const dialogResponse = await DialogService.show(PeopleDialog);
+
+            console.log(dialogResponse)
+        }
+    }
 </script>
+
+<style scoped>
+
+</style>
