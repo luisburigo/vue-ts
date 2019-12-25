@@ -1,21 +1,18 @@
-import {Dialog, IDialog} from "@/common/Dialog";
-import Component from "vue-class-component";
+import {Dialog} from "@/common/Dialog/Dialog";
+import CDialog from "@/components/Dialog.vue";
+import Component, {createDecorator} from "vue-class-component";
+import {MapStateComponent} from '@/common/decorators';
 
-@Component
+@Component({components: {CDialog}})
+@MapStateComponent({name: "bean"})
 export default class PeopleDialog extends Dialog {
-    saveData(data: any) {
-        window.console.log(`> saving: `, data)
+    onShow(): void {
+        window.console.log("> Showing: ", this.state)
     }
 
     onHide(data: any): void {
-        this.saveData(data);
+        window.console.log("> Hidding")
     }
-
-    onShow(): void {
-        this.setState({
-            name: 'Example',
-            username: 'User'
-        })
-    }
-
 }
+
+console.log(new PeopleDialog)

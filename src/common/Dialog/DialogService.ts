@@ -1,4 +1,4 @@
-import {Dialog} from "@/common/Dialog";
+import {Dialog} from "@/common/Dialog/Dialog";
 import Vue from "vue";
 
 const noop = () => {
@@ -6,8 +6,8 @@ const noop = () => {
 
 export class DialogService {
 
-    static show(DialogConstructor: new () => Dialog): Promise<object> {
-        return new Promise<object>(resolve => {
+    static show(DialogConstructor: new () => Dialog, data?: object): Promise<object | boolean> {
+        return new Promise<object | boolean>(resolve => {
 
             // Create container render component
             let app = document.createElement("div");
@@ -16,16 +16,21 @@ export class DialogService {
             // Create instance component
             let vm: Dialog = new DialogConstructor();
 
+            // Set data if exists
+            if (data) {
+                vm.setState(data);
+            }
+
             // Render component in container and show
             vm.$mount(app);
             vm.show();
 
             // Get onHide method
             const onHide = vm.onHide || noop;
-            vm.onHide = function (data: any) {
+            vm.onHide = function (data: any, sendData?: boolean) {
 
-                // Execute onHide from component T
-                onHide.call(this, data);
+                // Execute onHide from component
+                onHide.call(this, data, sendData);
 
                 // Destroy and remove element
                 this.$destroy();
@@ -41,7 +46,7 @@ export class DialogService {
                 app = null;
 
                 // resolve promise
-                resolve(this.getState());
+                resolve(sendData && this.getState());
             }
         })
     }
